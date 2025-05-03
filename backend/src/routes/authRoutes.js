@@ -4,7 +4,6 @@ import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
-
 const generateToken = (userId) => {
   return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "15d" }); 
 };
@@ -13,7 +12,6 @@ router.post("/register", async (req, res) => {
   try {
     const { email, username, password } = req.body;
 
-  
     if (!username || !email || !password) {
       return res.status(400).json({ msg: "All fields are required" });
     }
@@ -31,16 +29,13 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ msg: "Email already exists" });
     }
 
-    
     const existingUsername = await User.findOne({ username });
     if (existingUsername) {
       return res.status(400).json({ msg: "Username already exists" });
     }
 
-    
     const profileImage = `https://avatars.dicebear.com/api/initials/${username}.svg`;
 
-   
     const user = new User({
       email,
       username,
@@ -48,13 +43,10 @@ router.post("/register", async (req, res) => {
       profileImage,
     });
 
-  
     await user.save();
 
-    
     const token = generateToken(user._id);
 
-    
     res.status(201).json({
       token,
       user: {
@@ -71,7 +63,36 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  res.send('login');
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ msg: "All fields are required" });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ msg: "User does not exist" });
+    }
+
+    const isPasswordCorrected = await user.comparePassword(password);
+    if (!isPasswordCorrected) {
+      return res.status(400).json({ msg: "Password invalid" });
+    }
+
+    const token = generateToken(user._id);
+    res.status(200).json({
+      token,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        profileImage: user.profileImage,
+      },
+    });
+  } catch (error) {
+    console.log("Error in login route:", error);
+    res.status(500).json({ msg: "Internal server error" });
+  }
 });
 
 export default router;
