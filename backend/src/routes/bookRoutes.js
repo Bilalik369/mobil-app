@@ -1,10 +1,11 @@
 import express from "express";
 import cloudinary from "../lib/cloudinary.js";
 import Book from "../models/Book.js";
+import { protectRoute } from "../middleware/protectRoute.js"; 
 
 const router = express.Router();
 
-router.post("/", protectRoute ,async (req, res) => {
+router.post("/", protectRoute, async (req, res) => {
   try {
     const { title, caption, rating, image } = req.body;
 
@@ -15,13 +16,12 @@ router.post("/", protectRoute ,async (req, res) => {
     const uploadResponse = await cloudinary.uploader.upload(image);
     const imageUrl = uploadResponse.secure_url;
 
-
     const newBook = new Book({
       title,
       caption,
       rating,
       image: imageUrl,
-      
+      user: req.user._id
     });
 
     await newBook.save();
