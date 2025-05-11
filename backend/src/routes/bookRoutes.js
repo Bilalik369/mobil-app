@@ -1,7 +1,8 @@
 import express from "express";
 import cloudinary from "../lib/cloudinary.js";
 import Book from "../models/Book.js";
-import { protectRoute } from "../middleware/protectRoute.js"; 
+import protectRoute from "../middleware/auth.middleware.js";
+
 
 const router = express.Router();
 
@@ -33,4 +34,32 @@ router.post("/", protectRoute, async (req, res) => {
   }
 });
 
+router.get("/" , protectRoute , async(req , res)=>{
+  try {  
+
+    const page = req.query.page || 1
+    const limit = req.query.limit || 5
+    const skip = (page - 1) * limit;
+
+    const books = await Book.find()
+    .sort({createdAt:-1})
+    .skip(skip)
+    .limit(limit)
+    .populate("user" , "username profileImage ")
+
+    const totalBooks = await Book.countDocuments()
+    res.send(
+      books,
+      currentPage , 
+      totalBooks
+    );
+
+
+
+  }catch(error){
+    console.log("Error in get all books")
+    res.status(500).json({msg : "internal server error "})
+
+  }
+})
 export default router;
