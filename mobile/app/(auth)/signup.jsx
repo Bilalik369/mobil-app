@@ -1,8 +1,9 @@
-import { Text, View , KeyboardAvoidingView, Platform, TextInput, TouchableOpacity } from "react-native";
+import { Text, View , KeyboardAvoidingView, Platform, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
 import { useState,  } from "react";
 import styles from "../../assets/styles/signup.styles";
 import { Ionicons } from "@expo/vector-icons";
 import COLORS from "../../constants/colors";
+import { useRouter } from "expo-router";
 
 export default function Signup() {
         const [username , setUsername] = useState('');
@@ -10,6 +11,8 @@ export default function Signup() {
         const [password , setPassword] = useState('');
         const [showPassword , setShowPassword] = useState(false);
         const [isLoading , setIsLoading] = useState(false);
+
+        const router = useRouter()
 
         const handleSignup=()=>{
 
@@ -101,18 +104,25 @@ export default function Signup() {
             </View>
 
           </View>
+         
+          <TouchableOpacity style={styles.button} onPress={handleSignup} disabled={isLoading}>
+            {isLoading ? (
+              <ActivityIndicator color="#fff"/>
 
+            ) : (
+              <Text style={styles.buttonText}>Sign up</Text>
+            )}
 
+          </TouchableOpacity>
+
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>Already an account</Text>
+            <TouchableOpacity onPress={()=> router.back()}>
+              <Text style={styles.link}>Login</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        
-        
-  
-        
-
       </View>
-      
-
-
     </View>
 
     </KeyboardAvoidingView>
