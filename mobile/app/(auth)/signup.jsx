@@ -1,26 +1,30 @@
-import { Text, View , KeyboardAvoidingView, Platform, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
+import { Text, View , KeyboardAvoidingView, Platform, TextInput, TouchableOpacity, ActivityIndicator, ScrollView, Alert } from "react-native";
 import { useState,  } from "react";
 import styles from "../../assets/styles/signup.styles";
 import { Ionicons } from "@expo/vector-icons";
 import COLORS from "../../constants/colors";
 import { useRouter } from "expo-router";
+import { useAuthStore } from "../../store/authStore";
 
 export default function Signup() {
         const [username , setUsername] = useState('');
         const [email , setEmail] = useState('');
         const [password , setPassword] = useState('');
         const [showPassword , setShowPassword] = useState(false);
-        const [isLoading , setIsLoading] = useState(false);
+
+        const {user , isLoading , register} = useAuthStore();
 
         const router = useRouter()
 
-        const handleSignup=()=>{
-
+        const handleSignup= async()=>{
+          const result = await register(username , email , password) 
+          if(!result.success) Alert.alert("error" , result.error);
         }
   return (
     <KeyboardAvoidingView style={{flex :1}}
     behavior={Platform.OS === "ios" ? "padding" : "height" }
     > 
+      <ScrollView contentContainerStyle={{flexGrow:1}}>
     <View style={styles.container}>
       <View style={styles.card}>
         {/* header */}
@@ -124,7 +128,7 @@ export default function Signup() {
         </View>
       </View>
     </View>
-
+    </ScrollView>
     </KeyboardAvoidingView>
   );
 }
