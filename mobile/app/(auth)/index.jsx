@@ -1,8 +1,4 @@
-<<<<<<< HEAD
     import { Text, TextInput, View, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, Platform , ScrollView    } from "react-native";
-=======
-    import { Text, TextInput, View, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, Platform , ScrollView  } from "react-native";
->>>>>>> 386b2fe70d58879c7ad9bf96229cf0318bccd1e9
     import styles from "../../assets/styles/login.styles";
     import { useState } from "react";
     import { Image } from "react-native";
@@ -31,11 +27,7 @@
         style ={{flex: 1}}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-<<<<<<< HEAD
           <ScrollView contentContainerStyle={{flexGrow:1}}>
-=======
-          <ScrollView contentContainerStyle={{flexGrow:1}} >
->>>>>>> 386b2fe70d58879c7ad9bf96229cf0318bccd1e9
         <View style={styles.container}>
           <View style= {styles.topIllustration}>
             <Image
