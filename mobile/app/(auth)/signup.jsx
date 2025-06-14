@@ -12,7 +12,7 @@ export default function Signup() {
         const [password , setPassword] = useState('');
         const [showPassword , setShowPassword] = useState(false);
 
-        const {user , isLoading , register} = useAuthStore();
+        const {user , isLoading , register, token} = useAuthStore();
 
         const router = useRouter()
 
@@ -20,6 +20,8 @@ export default function Signup() {
           const result = await register(username , email , password) 
           if(!result.success) Alert.alert("error" , result.error);
         }
+        console.log(user)
+        console.log(token)
   return (
     <KeyboardAvoidingView style={{flex :1}}
     behavior={Platform.OS === "ios" ? "padding" : "height" }
