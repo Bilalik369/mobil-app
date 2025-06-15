@@ -1,10 +1,11 @@
-    import { Text, TextInput, View, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, Platform , ScrollView    } from "react-native";
+    import { Text, TextInput, View, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, Platform , ScrollView, Alert    } from "react-native";
     import styles from "../../assets/styles/login.styles";
     import { useState } from "react";
     import { Image } from "react-native";
     import {Ionicons}  from "@expo/vector-icons"
   import COLORS from "../../constants/colors";
   import { Link } from "expo-router";
+  import { useAuthStore } from "../../stor/authStore";
 
 
 
@@ -13,12 +14,18 @@
       const [email , setEmail] = useState('');
       const [password , setPassword] = useState('');
       const [showpassword , setShowPassword] = useState(false);
-
-      const [isLoading , setIsLoading] = useState(false);
-
+      const { user, isLoading, login } = useAuthStore();
 
 
-      const handlelogin = () =>{
+
+    
+
+
+
+      const handlelogin = async() =>{
+        const result = await login(email , password);
+        if(!result.success) Alert.alert("Error" , result.error);
+
 
       }
       return (
